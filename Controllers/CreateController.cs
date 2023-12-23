@@ -24,7 +24,6 @@ public class CreateController : Controller
     {
         if (ModelState.IsValid)
         {
-            // Supervisor'ı kontrol et ve ekle
             var supervisor = _context.Supervisors.Include(s => s.Person)
                 .FirstOrDefault(s => s.Person.Name == supervisorName);
 
@@ -39,7 +38,6 @@ public class CreateController : Controller
                 _context.SaveChanges();
             }
 
-            // Co-Supervisor'ı kontrol et ve ekle
             var coSupervisor = _context.CoSupervisors.Include(cs => cs.Person)
                 .FirstOrDefault(cs => cs.Person.Name == coSupervisorName);
 
@@ -76,7 +74,6 @@ public class CreateController : Controller
             }
             else
             {
-                // Eğer varsa, Author'ı mevcut Person'a bağlayın
                 if (Author.Person == null)
                 {
                     var newAuthorPerson = new Person { Name = AuthorName };
@@ -88,10 +85,10 @@ public class CreateController : Controller
                 }
                 else
                 {
-                    Author.Person.Name = AuthorName; // Person'ın adını güncelleyin
+                    Author.Person.Name = AuthorName; 
                 }
 
-                Author.Name = AuthorName; // Author'ın adını güncelleyin
+                Author.Name = AuthorName; 
                 _context.SaveChanges();
             }
             var keyword = _context.Keywords.FirstOrDefault(k => k.KeywordText == keywordText);
@@ -103,7 +100,6 @@ public class CreateController : Controller
                 keyword = newKeyword;
             }
 
-            // Topic'i kontrol et ve ekle
             var topic = _context.SubjectTopics.FirstOrDefault(t => t.TopicName == topicName);
             if (topic == null)
             {
@@ -122,7 +118,6 @@ public class CreateController : Controller
                 university = newUniversity;
             }
 
-            // Institute'i kontrol et ve ekle
             var institute = _context.Institutes.FirstOrDefault(i => i.Name == instituteName);
             if (institute == null)
             {
@@ -132,7 +127,6 @@ public class CreateController : Controller
                 institute = newInstitute;
             }
 
-            // Thesis tablosuna kaydet
             thesis.SupervisorId = supervisor.SupervisorId;
             thesis.CoSupervisorId = coSupervisor.CoSupervisorId;
             thesis.AuthorId = Author.AuthorId;
@@ -145,9 +139,9 @@ public class CreateController : Controller
             _context.Theses.Add(thesis);
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Home"); // Başarılı olduğunda anasayfaya yönlendir
+            return RedirectToAction("Index", "Home"); 
         }
 
-        return View(thesis); // Hata varsa aynı sayfayı göster
+        return View(thesis); 
     }
 }

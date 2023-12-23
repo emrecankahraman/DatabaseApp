@@ -99,7 +99,6 @@ namespace DatabaseApp.Controllers
             }
             catch (Exception ex)
             {
-                // Hata ayrýntýlarýný logla veya debug modunda incele
                 Console.WriteLine(ex.ToString());
                 return Enumerable.Empty<Thesis>().AsQueryable();
             }

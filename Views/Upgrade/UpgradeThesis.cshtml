@@ -1,5 +1,4 @@
-﻿<!-- Views/Home/Index.cshtml-->
-@model List<DatabaseApp.Models.Thesis>
+﻿@model List<DatabaseApp.Models.Thesis>
 @{
     ViewData["Title"] = "Upgrade Thesis";
 }
@@ -101,14 +100,12 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <!-- Güncelleme formu -->
                         <form id="upgradeForm" asp-controller="Upgrade" asp-action="UpgradeThesis" method="post">
                             <input type="hidden" id="thesisId" name="id" />
                             <div class="form-group">
                                 <label for="selectedValue">Güncellenecek değeri seçin:</label>
                                 <select id="selectedValue" name="selectedValue" class="form-control" onchange="toggleNewValueSection(this)">
-                                    <!-- Seçenekler -->
-                                    <!-- ... -->
+                                   
                                     <option value="">Seçiniz</option>
                                     <option value="University">Üniversite</option>
                                     <option value="Supervisor">Supervisor</option>
@@ -122,8 +119,6 @@
                                 <label for="newValue">Yeni Değer:</label>
                                 <input type="text" id="newValue" name="newValue" class="form-control" />
                             </div>
-                            <!-- Diğer gerekli inputlar buraya eklenebilir -->
-                            
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -134,7 +129,6 @@
             </div>
         </div>
 
-        <!-- Script bölümü -->
         <script>
             function openUpgradeModal(thesisId) {
                 $('#upgradeModal').modal('show');
@@ -155,18 +149,16 @@
                         newValue: newValue
                     },
                     success: function (response) {
-                        $('#upgradeModal').modal('hide');
-                        // Başarılı güncelleme durumunda yapılacak işlemler
-                        // Örneğin, sayfayı yenilemek için window.location.reload();
+                        $('#upgradeModal').modal('hide'); // Veritabanına kayıt başarılıysa modalı kapat
+                        location.reload(); // Sayfayı yenile (istediğiniz duruma göre)
                     },
                     error: function (error) {
                         console.log(error);
-                        // Hata durumunda kullanıcıya bildirim gösterme
+                        $('#upgradeModal').modal('hide'); // Hata durumunda da modalı kapat
                     }
                 });
             }
 
-            // Yeni değer seçilince yeni değer alanını göster/gizle
             function toggleNewValueSection(select) {
                 var selectedValue = $(select).val();
                 if (selectedValue !== '') {
@@ -176,6 +168,7 @@
                 }
             }
         </script>
+
         }
 
 }

@@ -1,6 +1,6 @@
 ﻿using DatabaseApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; // Entity Framework kullanılıyorsa ekle
+using Microsoft.EntityFrameworkCore; 
 
 namespace DatabaseApp.Controllers
 {
@@ -21,17 +21,14 @@ namespace DatabaseApp.Controllers
         [HttpPost]
         public IActionResult Login(Admin user)
         {
-            // Kullanıcı adı ve parola karşılaştırması
             var userInDb = _context.Admins.FirstOrDefault(u => u.Username == user.Username && u.Password == user.Password);
 
             if (userInDb != null)
             {
-                // Doğru ise Index sayfasına yönlendir
                 return RedirectToAction("Upgrade", "Upgrade");
             }
             else
             {
-                // Hatalı giriş durumunda hata mesajı göster
                 ModelState.AddModelError(string.Empty, "Geçersiz kullanıcı adı veya parola.");
                 return View(user);
             }
