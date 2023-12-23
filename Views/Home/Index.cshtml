@@ -1,8 +1,103 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿<!-- Views/Home/Index.cshtml-->
+@model List<DatabaseApp.Models.Thesis>
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+<h1>@ViewData["Title"]</h1>
+<div class="menu">
+    <a asp-controller="Account" asp-action="Login">Sayfa</a>
+</div>
+
+<div class="menu">
+    <a asp-controller="Create" asp-action="Create">Sayfa</a>
+</div>
+<div>
+    <form asp-controller="Home" asp-action="AraCokluKriterGore" method="post">
+        <label for="yazar">Yazara Göre Ara:</label>
+        <input type="text" id="yazar" name="yazar" />
+
+        <label for="title">Başlık'a Göre Ara:</label>
+        <input type="text" id="title" name="title" />
+
+        <label for="universite">Üniversite'ye Göre Ara:</label>
+        <input type="text" id="universite" name="universite" />
+
+        <label for="enstitu">Enstitü'ye Göre Ara:</label>
+        <input type="text" id="enstitu" name="enstitu" />
+
+        <label for="dil">Dile Göre Ara:</label>
+        <input type="text" id="dil" name="dil" />
+
+        <label for="danisman">Danışmana Göre Ara:</label>
+        <input type="text" id="danisman" name="danisman" />
+
+        <label for="danisman">Keyworde Göre Ara:</label>
+        <input type="text" id="keyword" name="keyword" />
+        
+        <label for="danisman">Topice göre ara:</label>
+        <input type="text" id="topic" name="topic" />
+        
+      
+
+        <button type="submit">Ara</button>
+    </form>
+</div>
+
+@if (ViewBag.AramaMetni != null)
+{
+        <h2>Arama Sonuçları</h2>
+        <p>Arama Kriteri: @ViewBag.AramaMetni</p>
+
+    @if (Model != null && Model.Any())
+    {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Başlık</th>
+                            <th>Özet</th>
+                            <th>Yıl</th>
+                            <th>Tür</th>
+                            <th>Sayfa Sayısı</th>
+                            <th>Dil</th>
+                            <th>Teslim Tarihi</th>
+                            <th>Yazar</th>
+                            <th>Üniversite</th>
+                            <th>Enstitü</th>
+                            <th>Supervisor</th>
+                            <th>Cosupervisor</th>
+                            <th>Keyword</th>
+                            <th>Topic</th>
+                            
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                @foreach (var tez in Model)
+                {
+                                <tr>
+                                    <td>@tez.Title</td>
+                                    <td>@tez.Abstract</td>
+                                    <td>@tez.Year</td>
+                                    <td>@tez.Type</td>
+                                    <td>@tez.NumOfPages</td>
+                                    <td>@tez.Language</td>
+                                    <td>@tez.SubmissionDate</td>
+                                    <td>@(tez.Author != null ? tez.Author.Name : "")</td>
+                                    <td>@(tez.University != null ? tez.University.Name : "")</td>
+                                    <td>@(tez.Institute != null ? tez.Institute.Name : "")</td>
+                                    <td>@(tez.Supervisor != null ? tez.Supervisor.Person?.Name : "")</td>
+                                    <td>@(tez.CoSupervisor != null ? tez.CoSupervisor.Person?.Name : "")</td>
+                                    <td>@(tez.Keyword != null ? tez.Keyword.KeywordText:"" ) </td>>
+                                    <td>@(tez.Topic != null ? tez.Topic.TopicName : "") </td>>
+
+                                </tr>
+                }
+                    </tbody>
+                </table>
+    }
+    else
+    {
+                <p>Sonuç bulunamadı.</p>
+    }
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>

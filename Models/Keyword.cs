@@ -10,6 +10,4 @@ public partial class Keyword
     public string? KeywordText { get; set; }
 
     public virtual ICollection<Thesis> Theses { get; set; } = new List<Thesis>();
-
-    public virtual ICollection<Thesis> ThesisNumbers { get; set; } = new List<Thesis>();
 }

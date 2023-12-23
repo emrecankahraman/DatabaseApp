@@ -1,0 +1,185 @@
+﻿<!-- Views/Home/Index.cshtml-->
+@model List<DatabaseApp.Models.Thesis>
+@{
+    ViewData["Title"] = "Upgrade Thesis";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <form asp-controller="Upgrade" asp-action="AraCokluKriterGore" method="post">
+        <label for="yazar">Yazara Göre Ara:</label>
+        <input type="text" id="yazar" name="yazar" />
+
+        <label for="title">Başlık'a Göre Ara:</label>
+        <input type="text" id="title" name="title" />
+
+        <label for="universite">Üniversite'ye Göre Ara:</label>
+        <input type="text" id="universite" name="universite" />
+
+        <label for="enstitu">Enstitü'ye Göre Ara:</label>
+        <input type="text" id="enstitu" name="enstitu" />
+
+        <label for="dil">Dile Göre Ara:</label>
+        <input type="text" id="dil" name="dil" />
+
+        <label for="danisman">Danışmana Göre Ara:</label>
+        <input type="text" id="danisman" name="danisman" />
+
+        <label for="danisman">Keyworde Göre Ara:</label>
+        <input type="text" id="keyword" name="keyword" />
+
+        <label for="danisman">Topice göre ara:</label>
+        <input type="text" id="topic" name="topic" />
+
+
+
+        <button type="submit">Ara</button>
+    </form>
+</div>
+
+@if (ViewBag.AramaMetni != null)
+{
+    <h2>Arama Sonuçları</h2>
+    <p>Arama Kriteri: @ViewBag.AramaMetni</p>
+
+    @if (Model != null && Model.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th>Özet</th>
+                    <th>Yıl</th>
+                    <th>Tür</th>
+                    <th>Sayfa Sayısı</th>
+                    <th>Dil</th>
+                    <th>Teslim Tarihi</th>
+                    <th>Yazar</th>
+                    <th>Üniversite</th>
+                    <th>Enstitü</th>
+                    <th>Supervisor</th>
+                    <th>Cosupervisor</th>
+                    <th>Keyword</th>
+                    <th>Topic</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tez in Model)
+                {
+                    <tr>
+                        <td>@tez.Title</td>
+                        <td>@tez.Abstract</td>
+                        <td>@tez.Year</td>
+                        <td>@tez.Type</td>
+                        <td>@tez.NumOfPages</td>
+                        <td>@tez.Language</td>
+                        <td>@tez.SubmissionDate</td>
+                        <td>@(tez.Author != null ? tez.Author.Name : "")</td>
+                        <td>@(tez.University != null ? tez.University.Name : "")</td>
+                        <td>@(tez.Institute != null ? tez.Institute.Name : "")</td>
+                        <td>@(tez.Supervisor != null ? tez.Supervisor.Person?.Name : "")</td>
+                        <td>@(tez.CoSupervisor != null ? tez.CoSupervisor.Person?.Name : "")</td>
+                        <td>@(tez.Keyword != null ? tez.Keyword.KeywordText : "") </td>>
+                        <td>@(tez.Topic != null ? tez.Topic.TopicName : "") </td>>
+                        <td>
+                            <button type="button" class="btn btn-primary" onclick="openUpgradeModal('@tez.ThesisNumber')">Güncelle</button>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog" aria-labelledby="upgradeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="upgradeModalLabel">Tez Güncelleme</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Güncelleme formu -->
+                        <form id="upgradeForm" asp-controller="Upgrade" asp-action="UpgradeThesis" method="post">
+                            <input type="hidden" id="thesisId" name="id" />
+                            <div class="form-group">
+                                <label for="selectedValue">Güncellenecek değeri seçin:</label>
+                                <select id="selectedValue" name="selectedValue" class="form-control" onchange="toggleNewValueSection(this)">
+                                    <!-- Seçenekler -->
+                                    <!-- ... -->
+                                    <option value="">Seçiniz</option>
+                                    <option value="University">Üniversite</option>
+                                    <option value="Supervisor">Supervisor</option>
+                                    <option value="CoSupervisor">CoSupervisor</option>
+                                    <option value="Keyword">Keyword</option>
+                                    <option value="Topic">Topic</option>
+                                    <option value="Institute">Institute</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="newValueSection" style="display:none;">
+                                <label for="newValue">Yeni Değer:</label>
+                                <input type="text" id="newValue" name="newValue" class="form-control" />
+                            </div>
+                            <!-- Diğer gerekli inputlar buraya eklenebilir -->
+                            
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                        <button type="button" class="btn btn-primary" onclick="submitUpgradeForm()">Kaydet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Script bölümü -->
+        <script>
+            function openUpgradeModal(thesisId) {
+                $('#upgradeModal').modal('show');
+                $('#thesisId').val(thesisId);
+            }
+
+            function submitUpgradeForm() {
+                var selectedValue = $('#selectedValue').val();
+                var newValue = $('#newValue').val();
+                var thesisId = $('#thesisId').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Upgrade/UpgradeThesis',
+                    data: {
+                        id: thesisId,
+                        selectedValue: selectedValue,
+                        newValue: newValue
+                    },
+                    success: function (response) {
+                        $('#upgradeModal').modal('hide');
+                        // Başarılı güncelleme durumunda yapılacak işlemler
+                        // Örneğin, sayfayı yenilemek için window.location.reload();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        // Hata durumunda kullanıcıya bildirim gösterme
+                    }
+                });
+            }
+
+            // Yeni değer seçilince yeni değer alanını göster/gizle
+            function toggleNewValueSection(select) {
+                var selectedValue = $(select).val();
+                if (selectedValue !== '') {
+                    $('#newValueSection').show();
+                } else {
+                    $('#newValueSection').hide();
+                }
+            }
+        </script>
+        }
+
+}
+
+   
+
+

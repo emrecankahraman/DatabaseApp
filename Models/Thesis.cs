@@ -23,11 +23,13 @@ public partial class Thesis
 
     public int? SupervisorId { get; set; }
 
-    public int? CosupervisorId { get; set; }
+    public int? CoSupervisorId { get; set; }
 
     public int? AuthorId { get; set; }
 
     public int? KeywordId { get; set; }
+
+    public int? TopicId { get; set; }
 
     public int? UniversityId { get; set; }
 
@@ -35,7 +37,7 @@ public partial class Thesis
 
     public virtual Author? Author { get; set; }
 
-    public virtual CoSupervisor? Cosupervisor { get; set; }
+    public virtual CoSupervisor? CoSupervisor { get; set; }
 
     public virtual Institute? Institute { get; set; }
 
@@ -43,9 +45,7 @@ public partial class Thesis
 
     public virtual Supervisor? Supervisor { get; set; }
 
+    public virtual SubjectTopic? Topic { get; set; }
+
     public virtual University? University { get; set; }
-
-    public virtual ICollection<Keyword> Keywords { get; set; } = new List<Keyword>();
-
-    public virtual ICollection<SubjectTopic> Topics { get; set; } = new List<SubjectTopic>();
 }

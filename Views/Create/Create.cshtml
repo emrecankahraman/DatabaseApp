@@ -1,0 +1,88 @@
+﻿@model DatabaseApp.Models.Thesis
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create New Thesis</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Abstract"></label>
+        <input asp-for="Abstract" class="form-control" />
+        <span asp-validation-for="Abstract" class="text-danger"></span>
+    </div>
+
+
+
+    <div class="form-group">
+        <label asp-for="Year"></label>
+        <input asp-for="Year" class="form-control" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Type"></label>
+        <input asp-for="Type" class="form-control" />
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NumOfPages"></label>
+        <input asp-for="NumOfPages" class="form-control" />
+        <span asp-validation-for="NumOfPages" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Language"></label>
+        <input asp-for="Language" class="form-control" />
+        <span asp-validation-for="Language" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SubmissionDate"></label>
+        <input asp-for="SubmissionDate" type="date" class="form-control" />
+        <span asp-validation-for="SubmissionDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="keywordText">keyword Name</label>
+        <input type="text" id="keywordText" name="keywordText" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="universityName">university Name</label>
+        <input type="text" id="universityName" name="universityName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="instituteName">institute Name</label>
+        <input type="text" id="instituteName" name="instituteName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="topicName">topic Name</label>
+        <input type="text" id="topicName" name="topicName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="SupervisorName">Supervisor Name</label>
+        <input type="text" id="SupervisorName" name="SupervisorName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="CoSupervisorName">Co-Supervisor Name</label>
+        <input type="text" id="CoSupervisorName" name="CoSupervisorName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="AuthorName">Author Name</label>
+        <input type="text" id="Authorname" name="AuthorName" class="form-control" />
+    </div>
+
+    <!-- Diğer giriş alanları eklenebilir -->
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

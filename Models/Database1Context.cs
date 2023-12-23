@@ -15,6 +15,8 @@ public partial class Database1Context : DbContext
     {
     }
 
+    public virtual DbSet<Admin> Admins { get; set; }
+
     public virtual DbSet<Author> Authors { get; set; }
 
     public virtual DbSet<CoSupervisor> CoSupervisors { get; set; }
@@ -35,69 +37,76 @@ public partial class Database1Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=EMRECAN;Initial Catalog=Database1;Integrated Security=True;Encrypt=False");
+        => optionsBuilder.UseSqlServer("Server=.;Database=Database1;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseCollation("Turkish_100_CS_AI");
+
+        modelBuilder.Entity<Admin>(entity =>
+        {
+            entity.HasKey(e => e.AdminId).HasName("PK__Admin__719FE4E8EC39603E");
+
+            entity.ToTable("Admin");
+
+            entity.Property(e => e.AdminId)
+                .ValueGeneratedNever()
+                .HasColumnName("AdminID");
+            entity.Property(e => e.Password).HasMaxLength(100);
+            entity.Property(e => e.Username).HasMaxLength(100);
+        });
+
         modelBuilder.Entity<Author>(entity =>
         {
-            entity.HasKey(e => e.AuthorId).HasName("PK__Author__70DAFC144335C0D4");
+            entity.HasKey(e => e.AuthorId).HasName("PK__Author__70DAFC146B8BF10E");
 
             entity.ToTable("Author");
 
-            entity.Property(e => e.AuthorId)
-                .ValueGeneratedNever()
-                .HasColumnName("AuthorID");
+            entity.Property(e => e.AuthorId).HasColumnName("AuthorID");
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.PersonId).HasColumnName("PersonID");
 
             entity.HasOne(d => d.Person).WithMany(p => p.Authors)
                 .HasForeignKey(d => d.PersonId)
-                .HasConstraintName("FK__Author__PersonID__4D94879B");
+                .HasConstraintName("FK__Author__PersonID__3B75D760");
         });
 
         modelBuilder.Entity<CoSupervisor>(entity =>
         {
-            entity.HasKey(e => e.CoSupervisorId).HasName("PK__CoSuperv__845F095FE0CE6513");
+            entity.HasKey(e => e.CoSupervisorId).HasName("PK__CoSuperv__845F095FB477A63E");
 
             entity.ToTable("CoSupervisor");
 
-            entity.Property(e => e.CoSupervisorId)
-                .ValueGeneratedNever()
-                .HasColumnName("CoSupervisorID");
+            entity.Property(e => e.CoSupervisorId).HasColumnName("CoSupervisorID");
             entity.Property(e => e.PersonId).HasColumnName("PersonID");
 
             entity.HasOne(d => d.Person).WithMany(p => p.CoSupervisors)
                 .HasForeignKey(d => d.PersonId)
-                .HasConstraintName("FK__CoSupervi__Perso__534D60F1");
+                .HasConstraintName("FK__CoSupervi__Perso__412EB0B6");
         });
 
         modelBuilder.Entity<Institute>(entity =>
         {
-            entity.HasKey(e => e.InstituteId).HasName("PK__Institut__09EC0D9B3E70CB0F");
+            entity.HasKey(e => e.InstituteId).HasName("PK__Institut__09EC0D9B3FD30B8F");
 
             entity.ToTable("Institute");
 
-            entity.Property(e => e.InstituteId)
-                .ValueGeneratedNever()
-                .HasColumnName("InstituteID");
+            entity.Property(e => e.InstituteId).HasColumnName("InstituteID");
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.UniversityId).HasColumnName("UniversityID");
 
             entity.HasOne(d => d.University).WithMany(p => p.Institutes)
                 .HasForeignKey(d => d.UniversityId)
-                .HasConstraintName("FK__Institute__Unive__5812160E");
+                .HasConstraintName("FK__Institute__Unive__45F365D3");
         });
 
         modelBuilder.Entity<Keyword>(entity =>
         {
-            entity.HasKey(e => e.KeywordId).HasName("PK__Keyword__37C135C1FDD15F31");
+            entity.HasKey(e => e.KeywordId).HasName("PK__Keyword__37C135C17900171E");
 
             entity.ToTable("Keyword");
 
-            entity.Property(e => e.KeywordId)
-                .ValueGeneratedNever()
-                .HasColumnName("KeywordID");
+            entity.Property(e => e.KeywordId).HasColumnName("KeywordID");
             entity.Property(e => e.KeywordText)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -105,133 +114,93 @@ public partial class Database1Context : DbContext
 
         modelBuilder.Entity<Person>(entity =>
         {
-            entity.HasKey(e => e.PersonId).HasName("PK__Person__AA2FFB85EA6A0FBB");
+            entity.HasKey(e => e.PersonId).HasName("PK__Person__AA2FFB85E39D2B74");
 
             entity.ToTable("Person");
 
-            entity.Property(e => e.PersonId)
-                .ValueGeneratedNever()
-                .HasColumnName("PersonID");
+            entity.Property(e => e.PersonId).HasColumnName("PersonID");
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Role).HasMaxLength(50);
         });
 
         modelBuilder.Entity<SubjectTopic>(entity =>
         {
-            entity.HasKey(e => e.TopicId).HasName("PK__SubjectT__022E0F7D25059D96");
+            entity.HasKey(e => e.TopicId).HasName("PK__SubjectT__022E0F7D2D3CC8D2");
 
             entity.ToTable("SubjectTopic");
 
-            entity.Property(e => e.TopicId)
-                .ValueGeneratedNever()
-                .HasColumnName("TopicID");
+            entity.Property(e => e.TopicId).HasColumnName("TopicID");
             entity.Property(e => e.TopicName).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Supervisor>(entity =>
         {
-            entity.HasKey(e => e.SupervisorId).HasName("PK__Supervis__6FAABDAFF45176E0");
+            entity.HasKey(e => e.SupervisorId).HasName("PK__Supervis__6FAABDAFF002489D");
 
             entity.ToTable("Supervisor");
 
-            entity.Property(e => e.SupervisorId)
-                .ValueGeneratedNever()
-                .HasColumnName("SupervisorID");
+            entity.Property(e => e.SupervisorId).HasColumnName("SupervisorID");
             entity.Property(e => e.PersonId).HasColumnName("PersonID");
 
             entity.HasOne(d => d.Person).WithMany(p => p.Supervisors)
                 .HasForeignKey(d => d.PersonId)
-                .HasConstraintName("FK__Superviso__Perso__5070F446");
+                .HasConstraintName("FK__Superviso__Perso__3E52440B");
         });
 
         modelBuilder.Entity<Thesis>(entity =>
         {
-            entity.HasKey(e => e.ThesisNumber).HasName("PK__Thesis__BA8B77A65AAB033A");
+            entity.HasKey(e => e.ThesisNumber).HasName("PK__Thesis__BA8B77A6F9850505");
 
             entity.ToTable("Thesis");
 
-            entity.Property(e => e.ThesisNumber).ValueGeneratedNever();
             entity.Property(e => e.Abstract).HasMaxLength(4000);
             entity.Property(e => e.AuthorId).HasColumnName("AuthorID");
-            entity.Property(e => e.CosupervisorId).HasColumnName("CosupervisorID");
+            entity.Property(e => e.CoSupervisorId).HasColumnName("CoSupervisorID");
             entity.Property(e => e.InstituteId).HasColumnName("InstituteID");
             entity.Property(e => e.KeywordId).HasColumnName("KeywordID");
             entity.Property(e => e.Language).HasMaxLength(50);
             entity.Property(e => e.SupervisorId).HasColumnName("SupervisorID");
             entity.Property(e => e.Title).HasMaxLength(500);
+            entity.Property(e => e.TopicId).HasColumnName("TopicID");
             entity.Property(e => e.Type).HasMaxLength(50);
             entity.Property(e => e.UniversityId).HasColumnName("UniversityID");
 
             entity.HasOne(d => d.Author).WithMany(p => p.Theses)
                 .HasForeignKey(d => d.AuthorId)
-                .HasConstraintName("FK__Thesis__AuthorID__5EBF139D");
+                .HasConstraintName("FK__Thesis__AuthorID__5165187F");
 
-            entity.HasOne(d => d.Cosupervisor).WithMany(p => p.Theses)
-                .HasForeignKey(d => d.CosupervisorId)
-                .HasConstraintName("FK__Thesis__Cosuperv__5DCAEF64");
+            entity.HasOne(d => d.CoSupervisor).WithMany(p => p.Theses)
+                .HasForeignKey(d => d.CoSupervisorId)
+                .HasConstraintName("FK__Thesis__CoSuperv__5070F446");
 
             entity.HasOne(d => d.Institute).WithMany(p => p.Theses)
                 .HasForeignKey(d => d.InstituteId)
-                .HasConstraintName("FK__Thesis__Institut__619B8048");
+                .HasConstraintName("FK__Thesis__Institut__5535A963");
 
             entity.HasOne(d => d.Keyword).WithMany(p => p.Theses)
                 .HasForeignKey(d => d.KeywordId)
-                .HasConstraintName("FK__Thesis__KeywordI__5FB337D6");
+                .HasConstraintName("FK__Thesis__KeywordI__52593CB8");
 
             entity.HasOne(d => d.Supervisor).WithMany(p => p.Theses)
                 .HasForeignKey(d => d.SupervisorId)
-                .HasConstraintName("FK__Thesis__Supervis__5CD6CB2B");
+                .HasConstraintName("FK__Thesis__Supervis__4F7CD00D");
+
+            entity.HasOne(d => d.Topic).WithMany(p => p.Theses)
+                .HasForeignKey(d => d.TopicId)
+                .HasConstraintName("FK__Thesis__TopicID__534D60F1");
 
             entity.HasOne(d => d.University).WithMany(p => p.Theses)
                 .HasForeignKey(d => d.UniversityId)
-                .HasConstraintName("FK__Thesis__Universi__60A75C0F");
-
-            entity.HasMany(d => d.Keywords).WithMany(p => p.ThesisNumbers)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ThesisKeyword",
-                    r => r.HasOne<Keyword>().WithMany()
-                        .HasForeignKey("KeywordId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ThesisKey__Keywo__693CA210"),
-                    l => l.HasOne<Thesis>().WithMany()
-                        .HasForeignKey("ThesisNumber")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ThesisKey__Thesi__68487DD7"),
-                    j =>
-                    {
-                        j.HasKey("ThesisNumber", "KeywordId").HasName("PK__ThesisKe__B9F764FA46397070");
-                        j.ToTable("ThesisKeyword");
-                        j.IndexerProperty<int>("KeywordId").HasColumnName("KeywordID");
-                    });
-
-            entity.HasMany(d => d.Topics).WithMany(p => p.ThesisNumbers)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ThesisSubjectTopic",
-                    r => r.HasOne<SubjectTopic>().WithMany()
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ThesisSub__Topic__656C112C"),
-                    l => l.HasOne<Thesis>().WithMany()
-                        .HasForeignKey("ThesisNumber")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ThesisSub__Thesi__6477ECF3"),
-                    j =>
-                    {
-                        j.HasKey("ThesisNumber", "TopicId").HasName("PK__ThesisSu__7AA997517F0957F7");
-                        j.ToTable("ThesisSubjectTopic");
-                        j.IndexerProperty<int>("TopicId").HasColumnName("TopicID");
-                    });
+                .HasConstraintName("FK__Thesis__Universi__5441852A");
         });
 
         modelBuilder.Entity<University>(entity =>
         {
-            entity.HasKey(e => e.UniversityId).HasName("PK__Universi__9F19E19C17F94C80");
+            entity.HasKey(e => e.UniversityId).HasName("PK__Universi__9F19E19C47CA4EB3");
 
             entity.ToTable("University");
 
-            entity.Property(e => e.UniversityId)
-                .ValueGeneratedNever()
-                .HasColumnName("UniversityID");
+            entity.Property(e => e.UniversityId).HasColumnName("UniversityID");
             entity.Property(e => e.Name).HasMaxLength(100);
         });
 
