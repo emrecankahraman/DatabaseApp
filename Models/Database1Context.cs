@@ -41,8 +41,6 @@ public partial class Database1Context : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.UseCollation("Turkish_100_CS_AI");
-
         modelBuilder.Entity<Admin>(entity =>
         {
             entity.HasKey(e => e.AdminId).HasName("PK__Admin__719FE4E8EC39603E");
@@ -52,8 +50,12 @@ public partial class Database1Context : DbContext
             entity.Property(e => e.AdminId)
                 .ValueGeneratedNever()
                 .HasColumnName("AdminID");
-            entity.Property(e => e.Password).HasMaxLength(100);
-            entity.Property(e => e.Username).HasMaxLength(100);
+            entity.Property(e => e.Password)
+                .HasMaxLength(100)
+                .UseCollation("Turkish_100_CS_AI");
+            entity.Property(e => e.Username)
+                .HasMaxLength(100)
+                .UseCollation("Turkish_100_CS_AI");
         });
 
         modelBuilder.Entity<Author>(entity =>
@@ -63,7 +65,9 @@ public partial class Database1Context : DbContext
             entity.ToTable("Author");
 
             entity.Property(e => e.AuthorId).HasColumnName("AuthorID");
-            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .UseCollation("Turkish_100_CS_AI");
             entity.Property(e => e.PersonId).HasColumnName("PersonID");
 
             entity.HasOne(d => d.Person).WithMany(p => p.Authors)
@@ -92,7 +96,9 @@ public partial class Database1Context : DbContext
             entity.ToTable("Institute");
 
             entity.Property(e => e.InstituteId).HasColumnName("InstituteID");
-            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .UseCollation("Turkish_100_CS_AI");
             entity.Property(e => e.UniversityId).HasColumnName("UniversityID");
 
             entity.HasOne(d => d.University).WithMany(p => p.Institutes)
@@ -109,7 +115,8 @@ public partial class Database1Context : DbContext
             entity.Property(e => e.KeywordId).HasColumnName("KeywordID");
             entity.Property(e => e.KeywordText)
                 .HasMaxLength(50)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .UseCollation("Turkish_100_CS_AI");
         });
 
         modelBuilder.Entity<Person>(entity =>
@@ -119,8 +126,12 @@ public partial class Database1Context : DbContext
             entity.ToTable("Person");
 
             entity.Property(e => e.PersonId).HasColumnName("PersonID");
-            entity.Property(e => e.Name).HasMaxLength(50);
-            entity.Property(e => e.Role).HasMaxLength(50);
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .UseCollation("Turkish_100_CS_AI");
+            entity.Property(e => e.Role)
+                .HasMaxLength(50)
+                .UseCollation("Turkish_100_CS_AI");
         });
 
         modelBuilder.Entity<SubjectTopic>(entity =>
@@ -130,7 +141,9 @@ public partial class Database1Context : DbContext
             entity.ToTable("SubjectTopic");
 
             entity.Property(e => e.TopicId).HasColumnName("TopicID");
-            entity.Property(e => e.TopicName).HasMaxLength(100);
+            entity.Property(e => e.TopicName)
+                .HasMaxLength(100)
+                .UseCollation("Turkish_100_CS_AI");
         });
 
         modelBuilder.Entity<Supervisor>(entity =>
@@ -153,16 +166,24 @@ public partial class Database1Context : DbContext
 
             entity.ToTable("Thesis");
 
-            entity.Property(e => e.Abstract).HasMaxLength(4000);
+            entity.Property(e => e.Abstract)
+                .HasMaxLength(4000)
+                .UseCollation("Turkish_100_CS_AI");
             entity.Property(e => e.AuthorId).HasColumnName("AuthorID");
             entity.Property(e => e.CoSupervisorId).HasColumnName("CoSupervisorID");
             entity.Property(e => e.InstituteId).HasColumnName("InstituteID");
             entity.Property(e => e.KeywordId).HasColumnName("KeywordID");
-            entity.Property(e => e.Language).HasMaxLength(50);
+            entity.Property(e => e.Language)
+                .HasMaxLength(50)
+                .UseCollation("Turkish_100_CS_AI");
             entity.Property(e => e.SupervisorId).HasColumnName("SupervisorID");
-            entity.Property(e => e.Title).HasMaxLength(500);
+            entity.Property(e => e.Title)
+                .HasMaxLength(500)
+                .UseCollation("Turkish_100_CS_AI");
             entity.Property(e => e.TopicId).HasColumnName("TopicID");
-            entity.Property(e => e.Type).HasMaxLength(50);
+            entity.Property(e => e.Type)
+                .HasMaxLength(50)
+                .UseCollation("Turkish_100_CS_AI");
             entity.Property(e => e.UniversityId).HasColumnName("UniversityID");
 
             entity.HasOne(d => d.Author).WithMany(p => p.Theses)
@@ -201,7 +222,9 @@ public partial class Database1Context : DbContext
             entity.ToTable("University");
 
             entity.Property(e => e.UniversityId).HasColumnName("UniversityID");
-            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .UseCollation("Turkish_100_CS_AI");
         });
 
         OnModelCreatingPartial(modelBuilder);

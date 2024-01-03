@@ -1,102 +1,229 @@
 ﻿@model List<DatabaseApp.Models.Thesis>
 @{
-    ViewData["Title"] = "Ana Sayfa";
+    ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
 }
-<h1>@ViewData["Title"]</h1>
-<div class="menu">
-    <a asp-controller="Account" asp-action="Login">Sayfa</a>
-</div>
 
-<div class="menu">
-    <a asp-controller="Create" asp-action="Create">Sayfa</a>
-</div>
-<div>
-    <form asp-controller="Home" asp-action="AraCokluKriterGore" method="post">
-        <label for="yazar">Yazara Göre Ara:</label>
-        <input type="text" id="yazar" name="yazar" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <label for="title">Başlık'a Göre Ara:</label>
-        <input type="text" id="title" name="title" />
+<style>
+    body {
+        background-color: #e0d9c9; 
+        color: #402b23; 
+    }
 
-        <label for="universite">Üniversite'ye Göre Ara:</label>
-        <input type="text" id="universite" name="universite" />
+    header {
+        background-color: #5f4339; 
+        color: #fff;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
 
-        <label for="enstitu">Enstitü'ye Göre Ara:</label>
-        <input type="text" id="enstitu" name="enstitu" />
+    .menu {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
 
-        <label for="dil">Dile Göre Ara:</label>
-        <input type="text" id="dil" name="dil" />
+    .menu a {
+        text-decoration: none;
+        color: #5f4339; 
+        font-weight: bold;
+        transition: color 0.3s ease-in-out;
+        font-size: 18px; 
+    }
 
-        <label for="danisman">Danışmana Göre Ara:</label>
-        <input type="text" id="danisman" name="danisman" />
+    .menu a:hover {
+        color: #402b23; 
+    }
 
-        <label for="danisman">Keyworde Göre Ara:</label>
-        <input type="text" id="keyword" name="keyword" />
+    form {
+        background: #f2e8da; 
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    input {
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #5f4339; 
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    button {
+        background-color: #5f4339; 
+        color: #fff;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #402b23; 
+    }
+
+    h2 {
+        text-align: center;
+        color: #402b23; 
+        margin-top: 20px;
+    }
+
+    p {
+        text-align: center;
+        color: #5f4339;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #5f4339; 
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #5f4339; 
+        color: #fff;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2e8da;
+    }
+
+    h1 {
+        font-size: 42px; 
+    }
+
+    .menu a {
+        font-size: 24px; 
+    }
+    .btn {
+        background-color: #5f4339; 
+        color: #fff;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
         
-        <label for="danisman">Topice göre ara:</label>
-        <input type="text" id="topic" name="topic" />
-        
-      
+</style>
 
-        <button type="submit">Ara</button>
-    </form>
-</div>
 
-@if (ViewBag.AramaMetni != null)
-{
-        <h2>Arama Sonuçları</h2>
-        <p>Arama Kriteri: @ViewBag.AramaMetni</p>
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
 
-    @if (Model != null && Model.Any())
+    <div class="menu">
+        <a asp-controller="Account" asp-action="Login">Log in</a>
+    </div>
+
+     <div class="row justify-content-center">
+        <form asp-controller="Home" asp-action="SearchByMultipleCriteria" method="post" class="col-lg-6">
+                <div class="row">
+                    <div class="col-md-6">
+                    <label for="author">Search By Author:</label>
+                    <input type="text" id="author" name="author" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="title">Search By Title:</label>
+                        <input type="text" id="title" name="title" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                    <label for="University">Search By University:</label>
+                    <input type="text" id="University" name="University" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                    <label for="Institute">Search By Institute:</label>
+                    <input type="text" id="Institute" name="Institute" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="language">Search By Language:</label>
+                        <input type="text" id="language" name="language" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="supervisor">Search By Supervisor:</label>
+                        <input type="text" id="supervisor" name="supervisor" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="keyword">Search By Keyword:</label>
+                        <input type="text" id="keyword" name="keyword" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="topic">Search By Topic:</label>
+                        <input type="text" id="topic" name="topic" class="form-control" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Search</button>
+            </form>
+        </div>
+    @if (ViewBag.Search != null)
     {
-                <table>
-                    <thead>
+        <h2>Search Results</h2>
+        <p>@ViewBag.Search</p>
+
+        @if (Model != null && Model.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Abstract</th>
+                        <th>Year</th>
+                        <th>Type</th>
+                        <th>Number Of Pages</th>
+                        <th>Language</th>
+                        <th>SubmissionDate</th>
+                        <th>Author</th>
+                        <th>University</th>
+                        <th>Institute</th>
+                        <th>Supervisor</th>
+                        <th>Cosupervisor</th>
+                        <th>Keyword</th>
+                        <th>Topic</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tez in Model)
+                    {
                         <tr>
-                            <th>Başlık</th>
-                            <th>Özet</th>
-                            <th>Yıl</th>
-                            <th>Tür</th>
-                            <th>Sayfa Sayısı</th>
-                            <th>Dil</th>
-                            <th>Teslim Tarihi</th>
-                            <th>Yazar</th>
-                            <th>Üniversite</th>
-                            <th>Enstitü</th>
-                            <th>Supervisor</th>
-                            <th>Cosupervisor</th>
-                            <th>Keyword</th>
-                            <th>Topic</th>
-                            
-
+                            <td>@tez.Title</td>
+                            <td>@tez.Abstract</td>
+                            <td>@tez.Year</td>
+                            <td>@tez.Type</td>
+                            <td>@tez.NumOfPages</td>
+                            <td>@tez.Language</td>
+                            <td>@tez.SubmissionDate</td>
+                            <td>@(tez.Author != null ? tez.Author.Name : "")</td>
+                            <td>@(tez.University != null ? tez.University.Name : "")</td>
+                            <td>@(tez.Institute != null ? tez.Institute.Name : "")</td>
+                            <td>@(tez.Supervisor != null ? tez.Supervisor.Person?.Name : "")</td>
+                            <td>@(tez.CoSupervisor != null ? tez.CoSupervisor.Person?.Name : "")</td>
+                            <td>@(tez.Keyword != null ? tez.Keyword.KeywordText:"" ) </td>
+                            <td>@(tez.Topic != null ? tez.Topic.TopicName : "") </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                @foreach (var tez in Model)
-                {
-                                <tr>
-                                    <td>@tez.Title</td>
-                                    <td>@tez.Abstract</td>
-                                    <td>@tez.Year</td>
-                                    <td>@tez.Type</td>
-                                    <td>@tez.NumOfPages</td>
-                                    <td>@tez.Language</td>
-                                    <td>@tez.SubmissionDate</td>
-                                    <td>@(tez.Author != null ? tez.Author.Name : "")</td>
-                                    <td>@(tez.University != null ? tez.University.Name : "")</td>
-                                    <td>@(tez.Institute != null ? tez.Institute.Name : "")</td>
-                                    <td>@(tez.Supervisor != null ? tez.Supervisor.Person?.Name : "")</td>
-                                    <td>@(tez.CoSupervisor != null ? tez.CoSupervisor.Person?.Name : "")</td>
-                                    <td>@(tez.Keyword != null ? tez.Keyword.KeywordText:"" ) </td>>
-                                    <td>@(tez.Topic != null ? tez.Topic.TopicName : "") </td>>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No result find.</p>
+        }
+    }
+</div>
 
-                                </tr>
-                }
-                    </tbody>
-                </table>
-    }
-    else
-    {
-                <p>Sonuç bulunamadı.</p>
-    }
-}
 

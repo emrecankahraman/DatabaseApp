@@ -1,45 +1,159 @@
 ﻿@model List<DatabaseApp.Models.Thesis>
 @{
-    ViewData["Title"] = "Upgrade Thesis";
+    ViewData["Title"] = "Update Thesis";
 }
+
+<style>
+    body {
+        background-color: #e0d9c9;
+        color: #402b23;
+    }
+
+    h1 {
+        text-align: center;
+        color: #5f4339;
+        margin-top: 5px;
+    }
+
+    form {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #f2e8da;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    label {
+        font-size: 16px;
+        margin-bottom: 5px;
+        color: #5f4339;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        border: 1px solid #5f4339;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    button {
+        background-color: #5f4339;
+        color: #fff;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #402b23;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #5f4339;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #5f4339;
+        color: #fff;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2e8da;
+    }
+
+    .modal-content {
+        background-color: #fff;
+    }
+
+    .modal-title {
+        color: #5f4339;
+    }
+
+    .modal-body {
+        color: #402b23;
+    }
+
+    .modal-footer {
+        background-color: #f2e8da;
+    }
+
+    .create-link {
+        text-align: center;
+        margin-top: 20px; 
+    }
+
+        
+        .create-link a {
+            color: #5f4339; 
+            text-decoration: none;
+            font-size: 24px; 
+            font-weight: bold;
+        }
+
+            .create-link a:hover {
+                text-decoration: underline;
+                border-bottom: 2px solid #402b23; 
+</style>
+
 <h1>@ViewData["Title"]</h1>
 
+<div class= "create-link">
+    <a asp-controller="Create" asp-action="Create">Create</a>
+</div>
+
 <div>
-    <form asp-controller="Upgrade" asp-action="AraCokluKriterGore" method="post">
-        <label for="yazar">Yazara Göre Ara:</label>
-        <input type="text" id="yazar" name="yazar" />
-
-        <label for="title">Başlık'a Göre Ara:</label>
+    <form asp-controller="Update" asp-action="SearchByMultipleCriteria" method="post">
+        <label for="author">Search by Author:</label>
+        <input type="text" id="author" name="author" />
+        
+        <label for="title">Search by Title:</label>
         <input type="text" id="title" name="title" />
-
-        <label for="universite">Üniversite'ye Göre Ara:</label>
-        <input type="text" id="universite" name="universite" />
-
-        <label for="enstitu">Enstitü'ye Göre Ara:</label>
-        <input type="text" id="enstitu" name="enstitu" />
-
-        <label for="dil">Dile Göre Ara:</label>
-        <input type="text" id="dil" name="dil" />
-
-        <label for="danisman">Danışmana Göre Ara:</label>
-        <input type="text" id="danisman" name="danisman" />
-
-        <label for="danisman">Keyworde Göre Ara:</label>
+        
+        <label for="university">Search by University:</label>
+        <input type="text" id="university" name="university" />
+        
+        <label for="institute">Search by Institute:</label>
+        <input type="text" id="institute" name="institute" />
+        
+        <label for="language">Search by Language:</label>
+        <input type="text" id="language" name="language" />
+        
+        <label for="supervisor">Search by Supervisor:</label>
+        <input type="text" id="supervisor" name="supervisor" />
+        
+        <label for="keyword">Search by Keyword:</label>
         <input type="text" id="keyword" name="keyword" />
-
-        <label for="danisman">Topice göre ara:</label>
+        
+        <label for="topic">Search by Topic:</label>
         <input type="text" id="topic" name="topic" />
+        
+        <button type="submit">Search</button>
 
-
-
-        <button type="submit">Ara</button>
     </form>
 </div>
 
-@if (ViewBag.AramaMetni != null)
+
+@if (ViewBag.Search != null)
 {
-    <h2>Arama Sonuçları</h2>
-    <p>Arama Kriteri: @ViewBag.AramaMetni</p>
+    <h2>Search Results</h2>
+    <p>@ViewBag.Search</p>
 
     @if (Model != null && Model.Any())
     {
@@ -83,27 +197,27 @@
                         <td>@(tez.Keyword != null ? tez.Keyword.KeywordText : "") </td>>
                         <td>@(tez.Topic != null ? tez.Topic.TopicName : "") </td>>
                         <td>
-                            <button type="button" class="btn btn-primary" onclick="openUpgradeModal('@tez.ThesisNumber')">Güncelle</button>
+                            <button type="button" class="btn btn-primary" onclick="openUpdateModal('@tez.ThesisNumber')">Update</button>
                         </td>
 
                     </tr>
                 }
             </tbody>
         </table>
-        <div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog" aria-labelledby="upgradeModalLabel" aria-hidden="true">
+        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="upgradeModalLabel">Tez Güncelleme</h5>
+                        <h5 class="modal-title" id="updateModalLabel">Tez Güncelleme</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="upgradeForm" asp-controller="Upgrade" asp-action="UpgradeThesis" method="post">
+                        <form id="updateForm" asp-controller="Update" asp-action="UpdateThesis" method="post">
                             <input type="hidden" id="thesisId" name="id" />
                             <div class="form-group">
-                                <label for="selectedValue">Güncellenecek değeri seçin:</label>
+                                <label for="selectedValue"> Choose the value to update:</label>
                                 <select id="selectedValue" name="selectedValue" class="form-control" onchange="toggleNewValueSection(this)">
                                    
                                     <option value="">Seçiniz</option>
@@ -116,45 +230,45 @@
                                 </select>
                             </div>
                             <div class="form-group" id="newValueSection" style="display:none;">
-                                <label for="newValue">Yeni Değer:</label>
+                                <label for="newValue">New value:</label>
                                 <input type="text" id="newValue" name="newValue" class="form-control" />
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
-                        <button type="button" class="btn btn-primary" onclick="submitUpgradeForm()">Kaydet</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="submitUpdateForm()">Save</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <script>
-            function openUpgradeModal(thesisId) {
-                $('#upgradeModal').modal('show');
+            function openUpdateModal(thesisId) {
+                $('#updateModal').modal('show');
                 $('#thesisId').val(thesisId);
             }
 
-            function submitUpgradeForm() {
+            function submitUpdateForm() {
                 var selectedValue = $('#selectedValue').val();
                 var newValue = $('#newValue').val();
                 var thesisId = $('#thesisId').val();
 
                 $.ajax({
                     type: 'POST',
-                    url: '/Upgrade/UpgradeThesis',
+                    url: '/Update/UpdateThesis',
                     data: {
                         id: thesisId,
                         selectedValue: selectedValue,
                         newValue: newValue
                     },
                     success: function (response) {
-                        $('#upgradeModal').modal('hide'); // Veritabanına kayıt başarılıysa modalı kapat
-                        location.reload(); // Sayfayı yenile (istediğiniz duruma göre)
+                        $('#updateModal').modal('hide'); 
+                        location.reload(); 
                     },
                     error: function (error) {
                         console.log(error);
-                        $('#upgradeModal').modal('hide'); // Hata durumunda da modalı kapat
+                        $('#updateModal').modal('hide'); 
                     }
                 });
             }

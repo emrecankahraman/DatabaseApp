@@ -54,7 +54,7 @@ public class CreateController : Controller
 
 
             var Author= _context.Authors.Include(s => s.Person)
-    .FirstOrDefault(a => a.Name == AuthorName);
+                .FirstOrDefault(a => a.Name == AuthorName);
 
             if (Author == null)
             {
@@ -130,7 +130,6 @@ public class CreateController : Controller
             thesis.SupervisorId = supervisor.SupervisorId;
             thesis.CoSupervisorId = coSupervisor.CoSupervisorId;
             thesis.AuthorId = Author.AuthorId;
-
             thesis.KeywordId = keyword.KeywordId;
             thesis.TopicId = topic.TopicId;
             thesis.UniversityId = university.UniversityId;
@@ -139,7 +138,7 @@ public class CreateController : Controller
             _context.Theses.Add(thesis);
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Home"); 
+            return RedirectToAction("Update", "Update"); 
         }
 
         return View(thesis); 

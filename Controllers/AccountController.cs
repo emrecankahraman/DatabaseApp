@@ -25,11 +25,11 @@ namespace DatabaseApp.Controllers
 
             if (userInDb != null)
             {
-                return RedirectToAction("Upgrade", "Upgrade");
+                return RedirectToAction("Update", "Update");
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Geçersiz kullanıcı adı veya parola.");
+                ModelState.AddModelError(string.Empty, "Invalid username or password.");
                 return View(user);
             }
         }

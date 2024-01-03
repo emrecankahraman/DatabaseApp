@@ -36,10 +36,9 @@ namespace DatabaseApp.Controllers
   
         
         [HttpPost]
-        public IActionResult AraCokluKriterGore(string yazar, string title, string universite, string enstitu, string dil, string danisman, string keyword, string topic)
+        public IActionResult SearchByMultipleCriteria(string author, string title, string university, string institute, string language, string supervisor, string keyword, string topic)
         {
-            
-            var sonuclar = _context.Theses
+            var results = _context.Theses
                 .Include(t => t.Author)
                     .ThenInclude(c => c.Person)
                 .Include(t => t.University)
@@ -48,21 +47,21 @@ namespace DatabaseApp.Controllers
                     .ThenInclude(c => c.Person)
                 .Include(t => t.CoSupervisor)
                     .ThenInclude(c => c.Person)
-                    .Include(t => t.Keyword)
-                 .Include(t => t.Topic);
+                .Include(t => t.Keyword)
+                .Include(t => t.Topic);
 
-            var filteredResults = FiltreleTheses(sonuclar, yazar, title, universite, enstitu, dil, danisman, keyword, topic);
+            var filteredResults = filterThesis(results, author, title, university, institute, language, supervisor, keyword, topic);
 
             var resultList = filteredResults.ToList();
-            ViewBag.AramaMetni = "Çoklu Kriterlere Göre Arama";
+            ViewBag.Search = "Search by Multiple Criteria";
             return View("Index", resultList);
         }
 
 
 
-        public static IQueryable<Thesis> FiltreleTheses(IQueryable<Thesis> sonuclar, string yazar, string title, string universite, string enstitu, string dil, string danisman,string keyword, string topic)
+        public static IQueryable<Thesis> filterThesis(IQueryable<Thesis> results, string author, string title, string university, string institute, string language, string supervisor, string keyword, string topic)
         {
-            if (sonuclar == null)
+            if (results == null)
             {
 
 
@@ -71,31 +70,19 @@ namespace DatabaseApp.Controllers
 
             try
             {
-
-                sonuclar = sonuclar.Include(t => t.Author)
-                   .ThenInclude(a => a.Person)
-                    .Include(t => t.University)
-                    .Include(t => t.Institute)
-                    .Include(t => t.CoSupervisor)
-                        .ThenInclude(c => c.Person)
-                    .Include(t => t.Supervisor)
-                        .ThenInclude(c => c.Person)
-                    .Include(t => t.Keyword)
-                     .Include(t => t.Topic);
-
-                sonuclar = sonuclar.Where(t =>
-            (string.IsNullOrEmpty(yazar) || (t.Author != null && t.Author.Person != null && t.Author.Person.Name != null && t.Author.Person.Name.Contains(yazar))) &&
-            (string.IsNullOrEmpty(title) || (t.Title != null && t.Title.Contains(title))) &&
-            (string.IsNullOrEmpty(universite) || (t.University != null && t.University.Name != null && t.University.Name.Contains(universite))) &&
-            (string.IsNullOrEmpty(enstitu) || (t.Institute != null && t.Institute.Name != null && t.Institute.Name.Contains(enstitu))) &&
-            (string.IsNullOrEmpty(dil) || (t.Language != null && t.Language.Contains(dil))) &&
-            (string.IsNullOrEmpty(danisman) || (t.Supervisor != null && t.Supervisor.Person != null && t.Supervisor.Person.Name != null && t.Supervisor.Person.Name.Contains(danisman))) &&
-           (string.IsNullOrEmpty(keyword) ||( t.Keyword != null && t.Keyword.KeywordText != null && t.Keyword.KeywordText.Contains(keyword))) &&
-            (string.IsNullOrEmpty(topic) || (t.Topic!= null && t.Topic.TopicName != null && t.Topic.TopicName.Contains(topic))) 
+                results = results.Where(t =>
+            (string.IsNullOrEmpty(author) || (t.Author.Person.Name.Contains(author))) &&
+            (string.IsNullOrEmpty(title) || (t.Title.Contains(title))) &&
+            (string.IsNullOrEmpty(university) || (t.University.Name.Contains(university))) &&
+            (string.IsNullOrEmpty(institute) || (t.Institute.Name.Contains(institute))) &&
+            (string.IsNullOrEmpty(language) || (t.Language.Contains(language))) &&
+            (string.IsNullOrEmpty(supervisor) || (t.Supervisor.Person.Name.Contains(supervisor))) &&
+            (string.IsNullOrEmpty(keyword) ||( t.Keyword.KeywordText.Contains(keyword))) &&
+            (string.IsNullOrEmpty(topic) || ( t.Topic.TopicName.Contains(topic))) 
 
                
             );
-                return sonuclar;
+                return results;
             }
             catch (Exception ex)
             {
